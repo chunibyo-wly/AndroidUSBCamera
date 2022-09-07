@@ -623,14 +623,16 @@ class CameraUvcStrategy(ctx: Context) : ICameraStrategy(ctx) {
      *
      * @param gain gain value, 0 means reset
      */
-    fun setGain(gain: Int) {
+    override fun setGain(gain: Int) {
         mUVCCamera?.gain = gain
     }
 
     /**
      * Get gain
      */
-    fun getGain() = mUVCCamera?.gain
+    override fun getGain(): Int? {
+        return mUVCCamera?.gain
+    }
 
     /**
      * Set gamma

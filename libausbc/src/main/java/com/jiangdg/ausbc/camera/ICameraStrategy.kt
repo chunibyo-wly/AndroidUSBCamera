@@ -373,6 +373,10 @@ abstract class ICameraStrategy(context: Context) : Handler.Callback {
      */
     fun isCameraOpened() = mIsPreviewing.get()
 
+    open fun getGain(): Int? = 0
+
+    open fun setGain(gain: Int) {}
+
     companion object {
         private const val TAG = "ICameraStrategy"
         private const val THREAD_NAME = "camera_manager"

@@ -422,4 +422,6 @@ abstract class CameraFragment : BaseFragment() {
             .setPreviewHeight(480)
             .create()
     }
+
+    protected fun setGain(gain: Int = 0) { mCameraClient?.setGain(gain) }
 }

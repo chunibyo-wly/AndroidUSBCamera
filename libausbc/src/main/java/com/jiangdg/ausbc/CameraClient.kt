@@ -491,6 +491,7 @@ class CameraClient internal constructor(builder: Builder) : IPreviewDataCallBack
      * @return [PreviewSize] list of camera
      */
     fun getAllPreviewSizes(aspectRatio: Double? = null): MutableList<PreviewSize>? {
+        mCamera?.getGain()
         return mCamera?.getAllPreviewSizes(aspectRatio)
     }
 
@@ -528,6 +529,8 @@ class CameraClient internal constructor(builder: Builder) : IPreviewDataCallBack
         }
         return mCamera.sendCameraCommand(command)
     }
+
+    fun setGain(gain: Int) { mCamera?.setGain(gain) }
 
     private fun initEncodeProcessor() {
         releaseEncodeProcessor()

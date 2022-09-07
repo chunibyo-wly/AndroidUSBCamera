@@ -160,6 +160,9 @@ class DemoFragment : CameraFragment(), View.OnClickListener, CaptureMediaView.On
         mViewBinding.albumPreviewIv.setOnClickListener(this)
         mViewBinding.captureBtn.setOnViewClickListener(this)
         mViewBinding.albumPreviewIv.setTheme(PreviewImageView.Theme.DARK)
+        mViewBinding.gainSlider.addOnChangeListener { _, value, _ ->
+            EventBus.with<Float>(BusKey.KEY_GAIN_VALUE).postMessage(value)
+        }
         switchLayoutClick()
     }
 
@@ -254,6 +257,11 @@ class DemoFragment : CameraFragment(), View.OnClickListener, CaptureMediaView.On
                 }
             }
         })
+
+        EventBus.with<Float>(BusKey.KEY_GAIN_VALUE).observe(this) {
+            setGain(it.toInt())
+            mViewBinding.gainText.text = "gain: $it"
+        }
     }
 
     private fun switchLayoutClick() {

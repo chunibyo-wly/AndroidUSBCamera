@@ -23,4 +23,5 @@ object BusKey {
     const val KEY_FRAME_RATE = "frame-rate"
     const val KEY_RENDER_READY = "render-ready"
     const val KEY_CAMERA_STATUS = "camera-status"
+    const val KEY_GAIN_VALUE = "gain-value"
 }
