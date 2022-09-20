@@ -7,7 +7,7 @@ import android.hardware.usb.UsbConstants
 import android.hardware.usb.UsbDevice
 import androidx.core.content.ContextCompat
 import com.jiangdg.ausbc.R
-import com.serenegiant.usb.DeviceFilter
+import com.jiangdg.usb.DeviceFilter
 
 /** Camera tools
  *
@@ -41,6 +41,26 @@ object CameraUtils {
                 false
             }
         }
+    }
+
+    /**
+     * Is camera contains mic
+     *
+     * @param device usb device
+     * @return true contains
+     */
+    fun isCameraContainsMic(device: UsbDevice?): Boolean {
+//        device ?: return false
+//        var hasMic = false
+//        for (i in 0 until device.interfaceCount) {
+//            val cls = device.getInterface(i).interfaceClass
+//            if (cls == UsbConstants.USB_CLASS_AUDIO) {
+//                hasMic = true
+//                break
+//            }
+//        }
+//        return hasMic
+        return false
     }
 
     /**

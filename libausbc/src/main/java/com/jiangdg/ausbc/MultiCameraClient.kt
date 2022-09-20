@@ -23,8 +23,10 @@ import com.jiangdg.ausbc.utils.CameraUtils.isUsbCamera
 import com.jiangdg.ausbc.utils.Logger
 import com.jiangdg.ausbc.utils.MediaUtils
 import com.jiangdg.ausbc.utils.Utils
-import com.jiangdg.natives.YUVUtils
-import com.serenegiant.usb.*
+import com.jiangdg.usb.*
+import com.jiangdg.usb.DeviceFilter
+import com.jiangdg.uvc.IFrameCallback
+import com.jiangdg.uvc.UVCCamera
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -290,16 +292,10 @@ class MultiCameraClient(ctx: Context, callback: IDeviceConnectCallBack?) {
                     mNV21DataQueue.offerFirst(data)
                     // for video
                     // avoid preview size changed
-                    if (mVideoProcess?.isEncoding() != true) {
+                    if (data.size != width * height * 3 / 2) {
                         return@IFrameCallback
                     }
-                    if (data.size != width * height * 3 /2) {
-                        return@IFrameCallback
-                    }
-                    val yuv420sp = ByteArray(data.size)
-                    System.arraycopy(data, 0, yuv420sp, 0, data.size)
-                    YUVUtils.nv21ToYuv420sp(yuv420sp, width, height)
-                    mVideoProcess?.putRawData(RawData(yuv420sp, yuv420sp.size))
+                    mVideoProcess?.putRawData(RawData(data, data.size))
                 }
             }
         }
@@ -834,6 +830,13 @@ class MultiCameraClient(ctx: Context, callback: IDeviceConnectCallBack?) {
         }
 
         /**
+         * Is mic supported
+         *
+         * @return true camera support mic
+         */
+        fun isMicSupported() = CameraUtils.isCameraContainsMic(device)
+
+        /**
          * Is record video
          */
         fun isRecordVideo() = mVideoProcess?.isEncoding() == true
@@ -892,7 +895,17 @@ class MultiCameraClient(ctx: Context, callback: IDeviceConnectCallBack?) {
 
         private fun initEncodeProcessor(previewWidth: Int, previewHeight: Int) {
             releaseEncodeProcessor()
-            mAudioProcess = AACEncodeProcessor()
+            mAudioProcess = AACEncodeProcessor(if (isMicSupported()) {
+                if (Utils.debugCamera) {
+                    Logger.i(TAG, "Audio record by using device internal mic")
+                }
+                mCtrlBlock
+            } else {
+                if (Utils.debugCamera) {
+                    Logger.i(TAG, "Audio record by using system mic")
+                }
+                null
+            })
             mVideoProcess = H264EncodeProcessor(previewWidth, previewHeight, false)
         }
 

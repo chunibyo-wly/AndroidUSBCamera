@@ -48,9 +48,8 @@ import com.jiangdg.ausbc.utils.bus.EventBus
 import com.jiangdg.ausbc.widget.AspectRatioSurfaceView
 import com.jiangdg.ausbc.widget.AspectRatioTextureView
 import com.jiangdg.ausbc.widget.IAspectRatio
-import com.jiangdg.natives.YUVUtils
-import com.serenegiant.usb.USBMonitor
-import com.serenegiant.usb.UVCCamera
+import com.jiangdg.usb.USBMonitor
+import com.jiangdg.uvc.UVCCamera
 import kotlin.math.abs
 
 /**
@@ -117,16 +116,10 @@ class CameraClient internal constructor(builder: Builder) : IPreviewDataCallBack
             val width = mRequest!!.previewWidth
             val height = mRequest!!.previewHeight
             // avoid preview size changed
-            if (mVideoProcess?.isEncoding() != true) {
-                return
-            }
             if (data.size != width * height * 3 /2) {
                 return
             }
-            val yuv420sp = ByteArray(data.size)
-            System.arraycopy(data, 0, yuv420sp, 0, data.size)
-            YUVUtils.nv21ToYuv420sp(yuv420sp, width, height)
-            mVideoProcess?.putRawData(RawData(yuv420sp, yuv420sp.size))
+            mVideoProcess?.putRawData(RawData(it, it.size))
         }
     }
 
@@ -140,8 +133,8 @@ class CameraClient internal constructor(builder: Builder) : IPreviewDataCallBack
             Logger.e(TAG,"open camera failed, need Manifest.permission.CAMERA permission")
             return
         }
-        Logger.i(TAG, "start open camera request = $mRequest, gl = $isEnableGLEs")
         initEncodeProcessor()
+        Logger.i(TAG, "start open camera request = $mRequest, gl = $isEnableGLEs")
         val previewWidth = mRequest!!.previewWidth
         val previewHeight = mRequest!!.previewHeight
         when (cameraView) {
@@ -548,7 +541,17 @@ class CameraClient internal constructor(builder: Builder) : IPreviewDataCallBack
         } else {
             mRequest!!.previewHeight
         }
-        mAudioProcess = AACEncodeProcessor()
+        mAudioProcess = AACEncodeProcessor(if ((mCamera is CameraUvcStrategy) && mCamera.isMicSupported()) {
+            if (Utils.debugCamera) {
+                Logger.i(TAG, "Audio record by using device internal mic")
+            }
+            mCamera.getUsbControlBlock()
+        } else {
+            if (Utils.debugCamera) {
+                Logger.i(TAG, "Audio record by using system mic")
+            }
+            null
+        })
         mVideoProcess = H264EncodeProcessor(encodeWidth, encodeHeight, isEnableGLEs)
     }
 

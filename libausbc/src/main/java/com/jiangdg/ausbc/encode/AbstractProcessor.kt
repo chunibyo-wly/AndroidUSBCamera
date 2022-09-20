@@ -25,6 +25,7 @@ import com.jiangdg.ausbc.encode.bean.RawData
 import com.jiangdg.ausbc.encode.muxer.Mp4Muxer
 import com.jiangdg.ausbc.utils.Logger
 import com.jiangdg.ausbc.utils.Utils
+import com.jiangdg.natives.YUVUtils
 import java.lang.Exception
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
@@ -34,7 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * @author Created by jiangdg on 2022/2/10
  */
-abstract class AbstractProcessor(private val gLESRender: Boolean = false) {
+abstract class AbstractProcessor(private val gLESRender: Boolean = false, private val width: Int = 0, private val height: Int = 0) {
     private var mEncodeThread: HandlerThread? = null
     private var mEncodeHandler: Handler? = null
     protected var mMediaCodec: MediaCodec? = null
@@ -222,11 +223,18 @@ abstract class AbstractProcessor(private val gLESRender: Boolean = false) {
             } else {
                 codec.getInputBuffer(inputIndex)
             }
+            var data: ByteArray = rawData.data
+            if (isVideo) {
+                val yuv420sp = ByteArray(rawData.size)
+                System.arraycopy(rawData.data, 0, yuv420sp, 0, rawData.size)
+                YUVUtils.nv21ToYuv420sp(yuv420sp, width, height)
+                data = yuv420sp
+            }
             inputBuffer?.clear()
-            inputBuffer?.put(rawData.data)
-            codec.queueInputBuffer(inputIndex, 0, rawData.data.size, getPTSUs(rawData.data.size), 0)
+            inputBuffer?.put(data)
+            codec.queueInputBuffer(inputIndex, 0, data.size, getPTSUs(data.size), 0)
             if (Utils.debugCamera) {
-                Logger.i(TAG, "queue mediacodec data, isVideo=$isVideo, len=${rawData.data.size}")
+                Logger.i(TAG, "queue mediacodec data, isVideo=$isVideo, len=${data.size}")
             }
         }
     }
