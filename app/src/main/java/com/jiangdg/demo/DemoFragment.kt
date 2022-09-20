@@ -43,7 +43,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.jiangdg.ausbc.base.BaseBottomDialog
 import com.jiangdg.ausbc.base.CameraFragment
-import com.jiangdg.demo.databinding.FragmentDemoBinding
 import com.jiangdg.ausbc.callback.ICaptureCallBack
 import com.jiangdg.ausbc.callback.IPlayCallBack
 import com.jiangdg.ausbc.camera.Camera1Strategy
@@ -57,15 +56,18 @@ import com.jiangdg.ausbc.render.effect.bean.CameraEffect
 import com.jiangdg.ausbc.utils.*
 import com.jiangdg.ausbc.utils.bus.BusKey
 import com.jiangdg.ausbc.utils.bus.EventBus
-import com.jiangdg.utils.imageloader.ILoader
-import com.jiangdg.utils.imageloader.ImageLoaders
 import com.jiangdg.ausbc.widget.*
 import com.jiangdg.demo.EffectListDialog.Companion.KEY_ANIMATION
 import com.jiangdg.demo.EffectListDialog.Companion.KEY_FILTER
 import com.jiangdg.demo.databinding.DialogMoreBinding
+import com.jiangdg.demo.databinding.FragmentDemoBinding
 import com.jiangdg.utils.MMKVUtils
+import com.jiangdg.utils.imageloader.ILoader
+import com.jiangdg.utils.imageloader.ImageLoaders
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 /** CameraFragment Usage Demo
@@ -419,6 +421,7 @@ class DemoFragment : CameraFragment(), View.OnClickListener, CaptureMediaView.On
             override fun onComplete(path: String?) {
                 showRecentMedia(true)
                 mViewBinding.albumPreviewIv.setNewImageFlag(false)
+                writeCameraInformation()
             }
         })
     }
@@ -711,6 +714,34 @@ class DemoFragment : CameraFragment(), View.OnClickListener, CaptureMediaView.On
                     ToastUtils.show("${e.localizedMessage}")
                 }
                 Logger.e(TAG, "showRecentMedia failed", e)
+            }
+        }
+    }
+
+    private fun writeCameraInformation() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            context ?: return@launch
+            if (!isFragmentAttached()) {
+                return@launch
+            }
+            try {
+                MediaUtils.findRecentMedia(requireContext(), true)?.also { path ->
+                    val basename = path.substring(0, path.lastIndexOf("."))
+                    val txtname = "${basename}.txt"
+                    activity?.runOnUiThread {
+                        ToastUtils.show(txtname)
+                    }
+                    val file = File(txtname)
+                    FileOutputStream(file).use { it ->
+                        it.write("gain: ${getGain()}\n".toByteArray())
+                        it.write("gain: ${getGain()}\n".toByteArray())
+                    }
+                }
+            } catch (e: Exception) {
+                activity?.runOnUiThread {
+                    ToastUtils.show("${e.localizedMessage}")
+                }
+                Logger.e(TAG, "write camera information failed", e)
             }
         }
     }
