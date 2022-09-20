@@ -260,7 +260,8 @@ class DemoFragment : CameraFragment(), View.OnClickListener, CaptureMediaView.On
 
         EventBus.with<Float>(BusKey.KEY_GAIN_VALUE).observe(this) {
             setGain(it.toInt())
-            mViewBinding.gainText.text = "gain: $it"
+            val gain = getGain()
+            mViewBinding.gainText.text = "gain: $gain"
         }
     }
 

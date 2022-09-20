@@ -532,6 +532,10 @@ class CameraClient internal constructor(builder: Builder) : IPreviewDataCallBack
 
     fun setGain(gain: Int) { mCamera?.setGain(gain) }
 
+    fun getGain(): Int {
+        return mCamera?.getGain() ?: 0
+    }
+
     private fun initEncodeProcessor() {
         releaseEncodeProcessor()
         val  encodeWidth = if (isEnableGLEs) {
