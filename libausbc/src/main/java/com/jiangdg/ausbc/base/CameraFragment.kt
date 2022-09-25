@@ -423,7 +423,33 @@ abstract class CameraFragment : BaseFragment() {
             .create()
     }
 
-    fun setGain(gain: Int = 0) { mCameraClient?.setGain(gain) }
+    fun setGain(gain: Int = 0) {
+        mCameraClient?.setGain(gain)
+    }
 
-    fun getGain(): Int { return mCameraClient?.getGain() ?: -1 }
+    fun getGain(): Int = mCameraClient?.getGain() ?: 0
+
+    fun setBrightness(brightness: Int = 0) {
+        mCameraClient?.setBrightness(brightness)
+    }
+
+    fun getBrightness(): Int = mCameraClient?.getBrightness() ?: 0
+
+    fun setGamma(gamma: Int = 0) {
+        mCameraClient?.setGamma(gamma)
+    }
+
+    fun getGamma(): Int = mCameraClient?.getGamma() ?: 0
+
+    fun getWhiteBalance(): Int = mCameraClient?.getWhiteBalance() ?: 0
+
+    fun setWhiteBalance(whiteBalance: Int = 0) {
+        mCameraClient?.setWhiteBalance(whiteBalance)
+    }
+
+    fun getAutoWhiteBalance(): Boolean = mCameraClient?.getAutoWhiteBalance() ?: true
+
+    fun setAutoWhiteBalance(autoWhiteBalance: Boolean = true) {
+        mCameraClient?.setAutoWhiteBalance(autoWhiteBalance)
+    }
 }

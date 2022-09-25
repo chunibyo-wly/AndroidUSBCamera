@@ -525,9 +525,31 @@ class CameraClient internal constructor(builder: Builder) : IPreviewDataCallBack
 
     fun setGain(gain: Int) { mCamera?.setGain(gain) }
 
-    fun getGain(): Int {
-        return mCamera?.getGain() ?: 0
+    fun getGain(): Int? = mCamera?.getGain()
+
+    fun setBrightness(brightness: Int) {
+        mCamera?.setBrightness(brightness)
     }
+
+    fun getBrightness(): Int? = mCamera?.getBrightness()
+
+    fun setGamma(gamma: Int) {
+        mCamera?.setGamma(gamma)
+    }
+
+    fun getGamma(): Int? = mCamera?.getGamma()
+
+    fun setWhiteBalance(whiteBalance: Int) {
+        mCamera?.setWhiteBalance(whiteBalance)
+    }
+
+    fun getWhiteBalance(): Int? = mCamera?.getWhiteBalance()
+
+    fun setAutoWhiteBalance(autoWhiteBalance: Boolean) {
+        mCamera?.setAutoWhiteBalance(autoWhiteBalance)
+    }
+
+    fun getAutoWhiteBalance(): Boolean? = mCamera?.getAutoWhiteBalance()
 
     private fun initEncodeProcessor() {
         releaseEncodeProcessor()

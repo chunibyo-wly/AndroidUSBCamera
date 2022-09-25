@@ -377,6 +377,22 @@ abstract class ICameraStrategy(context: Context) : Handler.Callback {
 
     open fun setGain(gain: Int) {}
 
+    open fun getBrightness(): Int? = 0
+
+    open fun setBrightness(brightness: Int) {}
+
+    open fun getGamma(): Int? = 0
+
+    open fun setGamma(gamma: Int) {}
+
+    open fun getWhiteBalance(): Int? = 0
+
+    open fun setWhiteBalance(whiteBalance: Int) {}
+
+    open fun getAutoWhiteBalance(): Boolean? = true
+
+    open fun setAutoWhiteBalance(autoWhiteBalance: Boolean) {}
+
     companion object {
         private const val TAG = "ICameraStrategy"
         private const val THREAD_NAME = "camera_manager"

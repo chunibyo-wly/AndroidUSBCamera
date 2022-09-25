@@ -24,4 +24,7 @@ object BusKey {
     const val KEY_RENDER_READY = "render-ready"
     const val KEY_CAMERA_STATUS = "camera-status"
     const val KEY_GAIN_VALUE = "gain-value"
+    const val KEY_BRIGHTNESS_VALUE = "brightness-value"
+    const val KEY_GAMMA_VALUE = "gamma-value"
+    const val KEY_WHITE_BALANCE_VALUE = "white-balance-value"
 }

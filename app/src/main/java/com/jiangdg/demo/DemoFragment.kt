@@ -720,7 +720,9 @@ class DemoFragment : CameraFragment(), View.OnClickListener, CaptureMediaView.On
                     val file = File(txtname)
                     FileOutputStream(file).use { it ->
                         it.write("gain: ${getGain()}\n".toByteArray())
-                        it.write("gain: ${getGain()}\n".toByteArray())
+                        it.write("brightness: ${getBrightness()}\n".toByteArray())
+                        it.write("gamma: ${getGamma()}\n".toByteArray())
+                        it.write("whiteBalance: ${getWhiteBalance()}".toByteArray())
                     }
                 }
             } catch (e: Exception) {

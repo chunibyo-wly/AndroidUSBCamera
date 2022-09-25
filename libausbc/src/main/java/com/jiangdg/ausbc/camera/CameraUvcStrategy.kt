@@ -626,9 +626,11 @@ class CameraUvcStrategy(ctx: Context) : ICameraStrategy(ctx) {
      *
      * @param autoWhiteBalance true enable auto white balance
      */
-    fun setAutoWhiteBalance(autoWhiteBalance: Boolean) {
+    override fun setAutoWhiteBalance(autoWhiteBalance: Boolean) {
         mUVCCamera?.autoWhiteBlance = autoWhiteBalance
     }
+
+    override fun getAutoWhiteBalance(): Boolean? = mUVCCamera?.autoWhiteBlance
 
     /**
      * Set zoom
@@ -656,37 +658,41 @@ class CameraUvcStrategy(ctx: Context) : ICameraStrategy(ctx) {
     /**
      * Get gain
      */
-    override fun getGain(): Int? {
-        return mUVCCamera?.gain
-    }
+    override fun getGain(): Int? = mUVCCamera?.gain
 
     /**
      * Set gamma
      *
      * @param gamma gamma value, 0 means reset
      */
-    fun setGamma(gamma: Int) {
+    override fun setGamma(gamma: Int) {
         mUVCCamera?.gamma = gamma
     }
 
     /**
      * Get gamma
      */
-    fun getGamma() = mUVCCamera?.gamma
+    override fun getGamma() = mUVCCamera?.gamma
 
     /**
      * Set brightness
      *
      * @param brightness brightness value, 0 means reset
      */
-    fun setBrightness(brightness: Int) {
+    override fun setBrightness(brightness: Int) {
         mUVCCamera?.brightness = brightness
     }
 
     /**
      * Get brightness
      */
-    fun getBrightness() = mUVCCamera?.brightness
+    override fun getBrightness(): Int? = mUVCCamera?.brightness
+
+    override fun setWhiteBalance(whiteBalance: Int) {
+        mUVCCamera?.whiteBlance = whiteBalance
+    }
+
+    override fun getWhiteBalance(): Int? = mUVCCamera?.whiteBlance
 
     /**
      * Set contrast
