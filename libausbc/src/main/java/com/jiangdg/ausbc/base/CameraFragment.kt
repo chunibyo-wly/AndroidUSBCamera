@@ -423,7 +423,7 @@ abstract class CameraFragment : BaseFragment() {
             .create()
     }
 
-    protected fun setGain(gain: Int = 0) { mCameraClient?.setGain(gain) }
+    fun setGain(gain: Int = 0) { mCameraClient?.setGain(gain) }
 
-    protected fun getGain(): Int { return mCameraClient?.getGain() ?: 0 }
+    fun getGain(): Int { return mCameraClient?.getGain() ?: -1 }
 }

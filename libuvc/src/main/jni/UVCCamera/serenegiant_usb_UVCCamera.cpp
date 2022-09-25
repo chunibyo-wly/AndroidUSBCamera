@@ -291,6 +291,7 @@ static jint nativeSetCaptureDisplay(JNIEnv *env, jobject thiz,
 
 //======================================================================
 // カメラコントロールでサポートしている機能を取得する
+// 获取相机控制器所支持的功能。
 static jlong nativeGetCtrlSupports(JNIEnv *env, jobject thiz,
 	ID_TYPE id_camera) {
 
@@ -307,6 +308,7 @@ static jlong nativeGetCtrlSupports(JNIEnv *env, jobject thiz,
 }
 
 // プロセッシングユニットでサポートしている機能を取得する
+// 获取处理单元所支持的功能。
 static jlong nativeGetProcSupports(JNIEnv *env, jobject thiz,
 	ID_TYPE id_camera) {
 

@@ -60,6 +60,7 @@ import com.jiangdg.ausbc.widget.*
 import com.jiangdg.demo.EffectListDialog.Companion.KEY_ANIMATION
 import com.jiangdg.demo.EffectListDialog.Companion.KEY_FILTER
 import com.jiangdg.demo.databinding.DialogMoreBinding
+import com.jiangdg.demo.databinding.DialogParamBinding
 import com.jiangdg.demo.databinding.FragmentDemoBinding
 import com.jiangdg.utils.MMKVUtils
 import com.jiangdg.utils.imageloader.ILoader
@@ -84,6 +85,8 @@ class DemoFragment : CameraFragment(), View.OnClickListener, CaptureMediaView.On
     private var mRecSeconds = 0
     private var mRecMinute = 0
     private var mRecHours = 0
+
+    lateinit var mParamBindingView: DialogParamBinding
 
     private val mCameraModeTabMap = mapOf(
         CaptureMediaView.CaptureMode.MODE_CAPTURE_PIC to R.id.takePictureModeTv,
@@ -518,27 +521,11 @@ class DemoFragment : CameraFragment(), View.OnClickListener, CaptureMediaView.On
     }
 
     private fun showEffectDialog() {
-        EffectListDialog(requireActivity()).apply {
-            setData(mEffectDataList, object : EffectListDialog.OnEffectClickListener {
-                override fun onEffectClick(effect: CameraEffect) {
-                    mEffectDataList.find {it.id == effect.id}.also {
-                        if (it == null) {
-                            ToastUtils.show("set effect failed!")
-                            return@also
-                        }
-                        updateRenderEffect(it.classifyId, it.effect)
-                        // save to sp
-                        if (effect.classifyId == CameraEffect.CLASSIFY_ID_ANIMATION) {
-                            KEY_ANIMATION
-                        } else {
-                            KEY_FILTER
-                        }.also { key ->
-                            MMKVUtils.set(key, effect.id)
-                        }
-                    }
-                }
-            })
-            show()
+        layoutInflater.inflate(R.layout.dialog_param, null).apply {
+            mParamBindingView = DialogParamBinding.bind(this)
+            ParameterDialog(this@DemoFragment).apply {
+                show()
+            }
         }
     }
 
